@@ -61,16 +61,20 @@ You should have an `AUTHORS` file at the root of your repository, listing all in
 
 <details>
 <summary>The shell will be compiled this way:</summary>
-`$ gcc -Wall -Werror -Wextra -pedantic -std=gnu89 \*.c -o hsh`
+ 
+ ```
+$ gcc -Wall -Werror -Wextra -pedantic -std=gnu89 \*.c -o hsh
+ ```
+ 
 </details>
 
 ## Output
-
 - Unless specified otherwise, your program must have the exact same output as `sh` (`/bin/sh`) as well as the exact same error output.
 - The only difference is when you print an error, the name of the program must be equivalent to your `argv[0]` (see below)
 
 <details>
 <summary>Example of error with sh:</summary>
+ 
 ```
 $ echo "qwerty" | /bin/sh
 /bin/sh: 1: qwerty: not found
@@ -78,10 +82,12 @@ $ echo "qwerty" | /bin/../bin/sh
 /bin/../bin/sh: 1: qwerty: not found
 $ 
 ```
+ 
 </details>
 
 <details>
 <summary>Same error with your program hsh:</summary>
+ 
 ```
 $ echo "qwerty" | ./hsh
 ./hsh: 1: qwerty: not found
@@ -89,12 +95,14 @@ $ echo "qwerty" | ./././hsh
 ./././hsh: 1: qwerty: not found
 $ 
 ```
+ 
 </details>
 
 ## Testing
 
 <details>
 <summary>The shell should work like this in interactive mode:</summary>
+ 
 ```
 $ ./hsh
 ($) /bin/ls
@@ -103,10 +111,12 @@ hsh main.c shell.c
 ($) exit
 $ 
 ```
+ 
 </details>
 
 <details>
 <summary>But also in non-interactive mode:</summary>
+ 
 ```
 $ echo "/bin/ls" | ./hsh
 hsh main.c shell.c test\_ls\_2
@@ -120,6 +130,7 @@ hsh main.c shell.c test\_ls\_2
 hsh main.c shell.c test\_ls\_2
 $
 ```
+ 
 </details>
 
 ## Project Description
@@ -178,38 +189,44 @@ $
 
 Upon invocation, **hsh** receives and copies the environment of the parent process in which it was executed. This environment is an array of *name-value* strings describing variables in the format *NAME=VALUE*. A few key environmental variables are:
 
-#### <details><summary>HOME</summary>
-The home directory of the current user and the default directory argument for the **cd** builtin command.
+<details><summary>HOME</summary>
+ 
+ The home directory of the current user and the default directory argument for the <b>cd</b> builtin command.
 
 ```
 $ echo $HOME
 /home/Boomni
 ```
 </details>
-#### <details><summary>PWD</summary>
-The current working directory as set by the **cd** command.
+<details><summary>PWD</summary>
+ 
+The current working directory as set by the <b>cd</b> command.
 
 ```
 $ echo $PWD
 /home/Boomni/my_repositories/simple_shell
 ```
 </details>
-#### <details><summary>OLDPWD</summary>
-The previous working directory as set by the **cd** command.
+<details><summary>OLDPWD</summary>
+ 
+The previous working directory as set by the <b>cd</b> command.
 
 ```
 $ echo $OLDPWD
 /home/Boomni
 ```
 </details>
-#### <details><summary>PATH</summary>
+<details><summary>PATH</summary>
+ 
 A colon-separated list of directories in which the shell looks for commands. A null directory name in the path (represented by any of two adjacent colons, an initial colon, or a trailing colon) indicates the current directory.
 
 ```
 $ echo $PATH
 /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 ```
+ 
 </details>
+
 ### Command Execution
 
 After receiving a command, **hsh** tokenizes it into words using `" "` as a delimiter. The first word is considered the command and all remaining words are considered arguments to that command. **hsh** then proceeds with the following actions:
@@ -241,7 +258,8 @@ $
 
 **hsh** interprets the `$` character for variable replacement.
 
-#### <details><summary>$ENV_VARIABLE</summary>
+<details><summary>$ENV_VARIABLE</summary>
+ 
 `ENV_VARIABLE` is substituted with its value.
 
 Example:
@@ -249,8 +267,10 @@ Example:
 $ echo $USER
 Boomni
 ```
+ 
 </details>
-#### <details><summary>$?</summary>
+<details><summary>$?</summary>
+ 
 `?` is substitued with the return value of the last program executed.
 
 Example:
@@ -258,8 +278,10 @@ Example:
 $ echo $?
 0
 ```
+ 
 </details>
-#### <details><summary>$$</summary>
+<details><summary>$$</summary>
+ 
 The second `$` is substitued with the current process ID.
 
 Example:
@@ -267,7 +289,9 @@ Example:
 $ echo $$
 5540
 ```
+ 
 </details>
+
 ### Comments 
 
 **hsh** ignores all words and characters preceeded by a `#` character on a line.
@@ -282,7 +306,8 @@ $ echo 'hello' #this will be ignored!
 
 **hsh** specially interprets the following operator characters:
 
-#### <details><summary>; - Command separator</summary>
+<details><summary>; - Command separator</summary>
+ 
 Commands separated by a `;` are executed sequentially.
 
 Example:
@@ -292,8 +317,10 @@ $ echo 'hello'; pwd; cat test
 $ /home/Boomni/my_repositories/simple_shell
 $ echo 'hello'
 ```
+ 
 </details>
-#### <details><summary>&& - AND logical operator</summary>
+<details><summary>&& - AND logical operator</summary>
+ 
 `command1 && command2`: `command2` is executed if, and only if, `command1` returns an exit status of zero.
 
 Example:
@@ -304,9 +331,12 @@ $ echo 'all good' && echo 'hello'
 'all good'
 $ 'hello'
 ```
+ 
 </details>
-#### <details><summary>|| - OR logical operator</summary>
-`command1 || command2`: `command2` is executed if, and only if, `command1` returns a non-zero exit status.
+
+<details><summary>|| - OR logical operator</summary>
+
+ `command1 || command2`: `command2` is executed if, and only if, `command1` returns a non-zero exit status.
 
 Example:
 ```
@@ -316,16 +346,18 @@ $ error! || echo 'but still runs'
 ```
 
 The operators `&&` and `||` have equal precedence, followed by `;`.
-</details>
-### hsh Builtin Commands
 
-#### <details><summary>cd</summary>
-  * Usage: `cd [DIRECTORY]`
-  * Changes the current directory of the process to `DIRECTORY`.
-  * If no argument is given, the command is interpreted as `cd $HOME`.
-  * If the argument `-` is given, the command is interpreted as `cd $OLDPWD` and the pathname of the new working directory is printed to standad output.
-  * If the argument, `--` is given, the command is interpreted as `cd $OLDPWD` but the pathname of the new working directory is not printed.
-  * The environment variables `PWD` and `OLDPWD` are updated after a change of directory.
+</details>
+
+### Builtin Commands
+<details><summary>cd</summary>
+
+ - Usage: `cd [DIRECTORY]`
+ - Changes the current directory of the process to `DIRECTORY`.
+ - If no argument is given, the command is interpreted as `cd $HOME`
+ - If the argument `-` is given, the command is interpreted as `cd $OLDPWD` and the pathname of the new working directory is printed to standad output.
+ - If the argument, `--` is given, the command is interpreted as `cd $OLDPWD` but the pathname of the new working directory is not printed.
+ - The environment variables `PWD` and `OLDPWD` are updated after a change of directory.
 
 Example:
 ```
@@ -340,9 +372,11 @@ $ cd -
 $ pwd
 /home/Boomni/my_repositories/simple_shell
 ```
+
 </details>
-#### <details><summary>alias</summary>
-  * Usage: `alias [NAME[='VALUE'] ...]`
+<details><summary>alias</summary>
+
+ * Usage: `alias [NAME[='VALUE'] ...]`
   * Handles aliases.
   * `alias`: Prints a list of all aliases, one per line, in the form `NAME='VALUE'`.
   * `alias NAME [NAME2 ...]`: Prints the aliases `NAME`, `NAME2`, etc. one per line, in the form `NAME='VALUE'`.
@@ -363,8 +397,9 @@ getenv.c    README.md
 getinfo.c   realloc.c
 ```
 </details>
-#### <details><summary>exit</summary>
-  * Usage: `exit [STATUS]`
+<details><summary>exit</summary>
+
+ * Usage: `exit [STATUS]`
   * Exits the shell.
   * The `STATUS` argument is the integer used to exit the shell.
   * If no argument is given, the command is interpreted as `exit 0`.
@@ -376,9 +411,11 @@ $
 $ exit
 Boomni@acer-aod255e:~/my_repositories/simple_shell$ 
 ```
+
 </details>
-#### <details><summary>env</summary>
-  * Usage: `env`
+<details><summary>env</summary>
+
+ * Usage: `env`
   * Prints the current environment.
 
 Example:
@@ -390,9 +427,11 @@ LC_NUMERIC=en_NG
 OLDPWD=/home/Boomni
 _=./hsh
 ```
+
 </details>
-#### <details><summary>setenv</summary>
-  * Usage: `setenv [VARIABLE] [VALUE]`
+<details><summary>setenv</summary>
+
+ * Usage: `setenv [VARIABLE] [VALUE]`
   * Initializes a new environment variable, or modifies an existing one.
   * Upon failure, prints a message to `stderr`.
 
@@ -403,11 +442,13 @@ $ setenv NAME Poppy
 $ echo $NAME
 Poppy
 ```
+ 
 </details>
-#### <details><summary>unsetenv</summary>
-  * Usage: `unsetenv [VARIABLE]`
-  * Removes an environmental variable.
-  * Upon failure, prints a message to `stderr`.
+<details><summary>unsetenv</summary>
+ 
+ - Usage: `unsetenv [VARIABLE]`
+ - Removes an environmental variable.
+ - Upon failure, prints a message to `stderr`.
 
 Example:
 ```
@@ -418,6 +459,7 @@ Girl
 $ unsetenv NAME
 $ echo $NAME
 ```
+ 
 </details>
 
 ### What we learned:
@@ -428,14 +470,12 @@ $ echo $NAME
 * Pair programming and team work
 * Building a test suite to check our own code
 
-
 ## Authors
-
-##### Jonathan Boomni 
+#### Jonathan Boomni
    - [Github](https://github.com/Boomni)
    - [Email](rejoiceoye1@gmail.com)
 
-#####  Benjamin Ifeanyichukwu Asogwa
+#### Benjamin Ifeanyichukwu Asogwa
 - [GitHub](https://github.com/BENKINGS-CODE)
 - [Email](ifeanyichukwubenjamin59@gmail.com)
 
